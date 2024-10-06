@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://api.openai.com"
+      "url": "https://api.mr5ai.com"
     }
   ],
   "paths": {
