@@ -13,6 +13,7 @@ This project stores [Plugins](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web
 
 | Name | Authentication | Description |
 | ---- | --- | ----------------------------- |
+| [SearXNGSearch](./plugins/searxng) | - | Plugin for searxng search engine. |
 | [Dalle3](./plugins/dalle) | bearer | openai's dall-e image generator|
 | [FluxPro](./plugins/flux) | custom | The pro version of FLUX.1, served in partnership with BFL |
 | [WolframAlpha](./plugins/wolframalpha) | custom | A wrapper around Wolfram Alpha |
