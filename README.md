@@ -26,4 +26,6 @@ This project stores [Plugins](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web
 | [CodeInterpreter](./plugins/codeinterpreterapi) | - | from: [leezhuuuuu/Code-Interpreter-Api](https://github.com/leezhuuuuu/Code-Interpreter-Api) |
 | [Chat PDF](./plugins/chatpdf) | - | from: [PDF AI Reader Chat (4.1 ★)](https://chatgpt.com/g/g-oMM2c1bD3) |
 | [Jina URL Content Reader](./plugins/jina-r) | - | Converts any URL to an LLM-friendly input |
+| [Kolors SilliconFlow Draw API](./plugins/KolorsSiliconFlow) | bearer | Draws images from text prompts with model Kwai-Kolors/Kolors |
+| [Tavily Search](./plugins/tavilysearch) | bearer | Tavily is a search engine optimized for LLMs, aimed at efficient, quick and persistent search results. |
 

@@ -1,0 +1,312 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tavily Search & Extract",
+    "version": "1.0.0",
+    "description": "API for Tavily search and extract endpoints."
+  },
+  "servers": [
+    {
+      "url": "https://api.tavily.com",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/search": {
+      "post": {
+        "summary": "Tavily Search",
+        "description": "Execute a search query using Tavily Search.",
+        "operationId": "tavilySearch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The search query to execute with Tavily."
+                  },
+                  "topic": {
+                    "type": "string",
+                    "enum": ["general", "news"],
+                    "default": "general",
+                    "description": "The category of the search."
+                  },
+                  "search_depth": {
+                    "type": "string",
+                    "enum": ["basic", "advanced"],
+                    "default": "basic",
+                    "description": "The depth of the search. A 'basic' search costs 1 credit while 'advanced' costs 2 credits."
+                  },
+                  "max_results": {
+                    "type": "integer",
+                    "default": 5,
+                    "minimum": 0,
+                    "maximum": 20,
+                    "description": "The maximum number of search results to return."
+                  },
+                  "time_range": {
+                    "type": "string",
+                    "enum": ["day", "week", "month", "year", "d", "w", "m", "y"],
+                    "nullable": true,
+                    "description": "The time range back from the current date to filter results."
+                  },
+                  "days": {
+                    "type": "integer",
+                    "default": 3,
+                    "minimum": 0,
+                    "description": "Number of days back from the current date to include. Available only if topic is 'news'."
+                  },
+                  "include_answer": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Include an LLM-generated answer to the provided query."
+                  },
+                  "include_raw_content": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Include the cleaned and parsed HTML content of each search result."
+                  },
+                  "include_images": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Also perform an image search and include the results in the response."
+                  },
+                  "include_image_descriptions": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When include_images is true, also add a descriptive text for each image."
+                  },
+                  "include_domains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "A list of domains to specifically include in the search results."
+                  },
+                  "exclude_domains": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "A list of domains to specifically exclude from the search results."
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search results returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    },
+                    "answer": {
+                      "type": "string"
+                    },
+                    "images": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "string"
+                          },
+                          "score": {
+                            "type": "number"
+                          },
+                          "raw_content": {
+                            "type": ["string", "null"]
+                          }
+                        }
+                      }
+                    },
+                    "response_time": {
+                      "type": "number",
+                      "description": "Time in seconds it took to complete the request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/extract": {
+      "post": {
+        "summary": "Tavily Extract",
+        "description": "Extract web page content from one or more specified URLs using Tavily Extract.",
+        "operationId": "tavilyExtract",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "urls": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ],
+                    "description": "The URL or list of URLs to extract content from."
+                  },
+                  "include_images": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Include a list of images extracted from the URLs in the response."
+                  },
+                  "extract_depth": {
+                    "type": "string",
+                    "enum": ["basic", "advanced"],
+                    "default": "basic",
+                    "description": "The depth of the extraction process."
+                  }
+                },
+                "required": ["urls"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Extraction results returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          },
+                          "raw_content": {
+                            "type": "string"
+                          },
+                          "images": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "failed_results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "url": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "response_time": {
+                      "type": "number",
+                      "description": "Time in seconds it took to complete the request."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "429": {
+            "description": "Too Many Requests"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
